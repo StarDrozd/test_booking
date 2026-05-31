@@ -2,6 +2,7 @@ import pytest
 import requests
 from faker import Faker
 from constants import HEADERS, BASE_URL
+from custom_requester import CustomRequester
 
 faker = Faker()
 
@@ -21,6 +22,16 @@ def auth_session():
 
     session.headers.update({"Cookie": f"token={token}"})
     return session
+
+@pytest.fixture
+def requester():
+    session = requests.session()
+    return CustomRequester(session, BASE_URL)
+
+@pytest.fixture
+def auth_requester(auth_session):
+    session = auth_session
+    return CustomRequester(session, BASE_URL)
 
 @pytest.fixture
 def booking_data():
